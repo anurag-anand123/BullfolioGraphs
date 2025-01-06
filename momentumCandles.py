@@ -49,7 +49,7 @@ def read_csv_and_get_symbols(file_path):
         df = pd.read_csv(file_path)
         if 'Symbol' not in df.columns:
             raise KeyError("The CSV file must contain a 'Symbol' column.")
-        return df['Symbol'].head(10).tolist()
+        return df['Symbol'].head(500).tolist()
     except FileNotFoundError:
         print(f"Error: File '{file_path}' not found.")
         return []
