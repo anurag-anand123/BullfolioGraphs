@@ -134,23 +134,14 @@ def save_candlestick_chart(data, symbol, rank, return_percent):
 def main():
     """Main function to execute the script."""
     try:
-        duration_type = input("Do you want to enter the duration in 'weeks' or 'months'? ").strip().lower()
-        if duration_type not in ['weeks', 'months']:
-            print("Invalid choice. Please enter either 'weeks' or 'months'.")
-            return
-
-        duration = int(input(f"Enter the number of {duration_type} for historical data: "))
+        months = int(input("Enter the number of months for historical data (e.g., 18 for 1.5 years): "))
         interval = input("Enter the data interval (e.g., '1d' for daily, '1wk' for weekly, '1mo' for monthly): ").strip()
-
-        if duration_type == 'weeks':
-            start_date = (datetime.now() - timedelta(weeks=duration)).strftime('%Y-%m-%d')
-        elif duration_type == 'months':
-            start_date = (datetime.now() - timedelta(days=duration * 30)).strftime('%Y-%m-%d')
-
-        print(f"Fetching data from {start_date} with interval '{interval}'.")
     except ValueError:
         print("Invalid input. Please enter valid numbers and interval.")
         return
+
+    start_date = (datetime.now() - timedelta(days=months * 30)).strftime('%Y-%m-%d')
+    print(f"Fetching data from {start_date} with interval '{interval}'.")
 
     if os.path.exists(GRAPH_FOLDER):
         shutil.rmtree(GRAPH_FOLDER)
