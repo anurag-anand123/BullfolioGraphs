@@ -6,8 +6,10 @@ import os
 import shutil
 
 # Constants
-CSV_FILE = 'ind_nifty500list.csv'
 GRAPH_FOLDER = 'graph_custom'
+
+suffix = ""
+csv_file = ""
 
 # Binance Dark Theme
 binance_dark = {
@@ -60,7 +62,7 @@ def read_csv_and_get_symbols(file_path):
 def fetch_stock_data(symbol, start_date, interval):
     """Fetch historical stock data for a given symbol."""
     try:
-        symbol_with_suffix = f"{symbol}.NS"
+        symbol_with_suffix = f"{symbol}{suffix}"
         data = yf.download(symbol_with_suffix, start=start_date, interval=interval)
         if data.empty or len(data) < 2:
             print(f"Insufficient data for {symbol}.")
@@ -88,11 +90,11 @@ def clean_and_prepare_data(data, symbol):
             data.columns = data.columns.map('_'.join).str.strip()
 
         column_mapping = {
-            f"Close_{symbol}.NS": 'Close',
-            f'High_{symbol}.NS': 'High',
-            f'Low_{symbol}.NS': 'Low',
-            f'Open_{symbol}.NS': 'Open',
-            f'Volume_{symbol}.NS': 'Volume',
+            f"Close_{symbol}{suffix}": 'Close',
+            f'High_{symbol}{suffix}': 'High',
+            f'Low_{symbol}{suffix}': 'Low',
+            f'Open_{symbol}{suffix}': 'Open',
+            f'Volume_{symbol}{suffix}': 'Volume',
         }
         data = data.rename(columns=column_mapping)
 
@@ -132,8 +134,24 @@ def save_candlestick_chart(data, symbol, rank, return_percent):
         print(f"Error saving candlestick chart for {symbol}: {e}")
 
 def main():
+    global suffix, csv_file
     """Main function to execute the script."""
     try:
+        # Ask user to select the country
+        country = input("Do you want to analyze stocks from 'US' or 'India'? ").strip().lower()
+        if country not in ['us', 'india']:
+            print("Invalid choice. Please enter either 'US' or 'India'.")
+            return
+
+        # Set the exchange based on the selected country
+        if country == 'us':
+            suffix = ""  # US stocks don't need a suffix for yfinance
+            csv_file = 'us.csv'  # Replace with your US stock list CSV
+        elif country == 'india':
+            suffix = ".NS"
+            csv_file = 'india.csv'
+
+
         duration_type = input("Do you want to enter the duration in 'weeks' or 'months'? ").strip().lower()
         if duration_type not in ['weeks', 'months']:
             print("Invalid choice. Please enter either 'weeks' or 'months'.")
@@ -156,7 +174,7 @@ def main():
         shutil.rmtree(GRAPH_FOLDER)
     os.makedirs(GRAPH_FOLDER)
 
-    symbols = read_csv_and_get_symbols(CSV_FILE)
+    symbols = read_csv_and_get_symbols(csv_file)
     if not symbols:
         return
 
