@@ -30,7 +30,7 @@
 <body>
 
 <h1>Graph Viewer</h1>
-<canvas id="graphCanvas" width="800" height="600"></canvas>
+<canvas id="graphCanvas" width="1400" height="800"></canvas>
 <div id="controls">
     <button id="prevBtn">Previous</button>
     <button id="nextBtn">Next</button>
@@ -61,12 +61,33 @@
         img.src = `${folder}/${index}.png`;
         img.onload = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Calculate the aspect ratio
+            const imgAspectRatio = img.width / img.height;
+            const canvasAspectRatio = canvas.width / canvas.height;
+
+            let drawWidth, drawHeight;
+            let offsetX = 0, offsetY = 0;
+
+            if (imgAspectRatio > canvasAspectRatio) {
+                // Image is wider than canvas
+                drawWidth = canvas.width;
+                drawHeight = canvas.width / imgAspectRatio;
+                offsetY = (canvas.height - drawHeight) / 2; // Center vertically
+            } else {
+                // Image is taller than canvas
+                drawHeight = canvas.height;
+                drawWidth = canvas.height * imgAspectRatio;
+                offsetX = (canvas.width - drawWidth) / 2; // Center horizontally
+            }
+
+            ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
         };
         img.onerror = () => {
             alert("No more images.");
         };
     }
+
 
     function setTool(tool) {
         currentTool = tool;
