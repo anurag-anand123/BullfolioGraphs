@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        canvas {
+            border: 1px solid #333;
+            cursor: crosshair;
+        }
+        #controls {
+            margin-top: 10px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Graph Viewer</h1>
+<canvas id="graphCanvas" width="800" height="600"></canvas>
+<div id="controls">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+    <button id="clearBtn">Clear</button>
+    <button id="lineTool">Line</button>
+    <button id="boxTool">Box</button>
+    <button id="freehandTool">Freehand</button>
+    <button id="eraserTool">Eraser</button>
+</div>
+
+<script>
+    const canvas = document.getElementById("graphCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let currentImageIndex = 1;
+    const folder = "graph_custom";
+
+    let drawing = false;
+    let startX, startY;
+    let currentTool = "freehand";
+
+    // Set drawing color to white
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+
+    function loadImage(index) {
+        const img = new Image();
+        img.src = `${folder}/${index}.png`;
+        img.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+        img.onerror = () => {
+            alert("No more images.");
+        };
+    }
+
+    function setTool(tool) {
+        currentTool = tool;
+    }
+
+    canvas.addEventListener("mousedown", (e) => {
+        startX = e.offsetX;
+        startY = e.offsetY;
+        drawing = true;
+        if (currentTool === "freehand") {
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+        }
+    });
+
+    canvas.addEventListener("mousemove", (e) => {
+        if (!drawing) return;
+
+        const x = e.offsetX;
+        const y = e.offsetY;
+
+        if (currentTool === "freehand") {
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        } else if (currentTool === "eraser") {
+            ctx.clearRect(x - 5, y - 5, 10, 10);
+        }
+    });
+
+    canvas.addEventListener("mouseup", (e) => {
+        if (!drawing) return;
+
+        const x = e.offsetX;
+        const y = e.offsetY;
+        drawing = false;
+
+        if (currentTool === "line") {
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        } else if (currentTool === "box") {
+            const width = x - startX;
+            const height = y - startY;
+            ctx.strokeRect(startX, startY, width, height);
+        }
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+        if (currentImageIndex > 1) {
+            currentImageIndex--;
+            loadImage(currentImageIndex);
+        }
+    });
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+        currentImageIndex++;
+        loadImage(currentImageIndex);
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        loadImage(currentImageIndex);
+    });
+
+    document.getElementById("lineTool").addEventListener("click", () => setTool("line"));
+    document.getElementById("boxTool").addEventListener("click", () => setTool("box"));
+    document.getElementById("freehandTool").addEventListener("click", () => setTool("freehand"));
+    document.getElementById("eraserTool").addEventListener("click", () => setTool("eraser"));
+
+    // Initial load
+    loadImage(currentImageIndex);
+</script>
+
+</body>
+</html>
