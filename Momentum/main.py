@@ -134,7 +134,7 @@ def save_candlestick_chart(data, symbol, rank, return_percent):
         print(f"Error saving candlestick chart for {symbol}: {e}")
 
 def main():
-    global suffix, csv_file
+    global suffix, csv_file, GRAPH_FOLDER
     """Main function to execute the script."""
     try:
         # Ask user to select the country
@@ -170,6 +170,7 @@ def main():
         print("Invalid input. Please enter valid numbers and interval.")
         return
 
+    GRAPH_FOLDER = f"{duration}{duration_type}{interval}"
     if os.path.exists(GRAPH_FOLDER):
         shutil.rmtree(GRAPH_FOLDER)
     os.makedirs(GRAPH_FOLDER)
