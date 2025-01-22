@@ -1,7 +1,7 @@
 # BullfolioGraphs
 A Python-based project designed to identify momentum stocks and visualize their performance through dynamically generated graphs. All generated graphs are saved locally for easy access and review.
 
-# Overview
+## Overview
 
 This open-source Python project helps in finding momentum stocks and generates graphical representations of all identified momentum stocks as .png images.
 
@@ -11,25 +11,25 @@ Python (Ensure it is installed and added to the system path)
 
 Visual Studio Code (VSCode) with Python extensions installed
 
-Installation
+## Installation
 
 Clone or download this repository to your local machine.
 
 Ensure that Python and VSCode with the necessary Python extensions are installed.
 
-Steps to Run the Project
+# Steps to Run the Project
 
-Step 1: Open Project Directory in VSCode
+## Step 1: Open Project Directory in VSCode
 
 Open the directory where the project is located in Visual Studio Code.
 
-Step 2: Execute the Main Script
+## Step 2: Execute the Main Script
 
 Run the script by executing the following command in the terminal:
 
 python Momentum/main.py
 
-Step 3: Provide Required Inputs
+## Step 3: Provide Required Inputs
 
 The script will prompt for several inputs:
 
@@ -73,19 +73,12 @@ and so on...
 
 This sorting helps in focusing on top-performing stocks to identify trend continuation patterns, saving time compared to manually analyzing all available stocks.
 
-Notes
+## Notes
 
 Ensure correct input values are provided as per the described format to avoid execution errors.
 
 Keep your Python environment up-to-date to avoid compatibility issues.
 
-Contribution
 
-Feel free to contribute to the project by submitting pull requests or reporting issues.
-
-License
-
-This project is licensed under the MIT License.
-
-Happy Trading!
+# Happy Trading!
 
