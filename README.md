@@ -5,7 +5,7 @@ A Python-based project designed to identify momentum stocks and visualize their 
 
 This open-source Python project helps in finding momentum stocks and generates graphical representations of all identified momentum stocks as .png images.
 
-Requirements
+## Requirements
 
 Python (Ensure it is installed and added to the system path)
 
