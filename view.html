@@ -6,24 +6,71 @@
     <title>Graph Viewer</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #76c7c0;
+        }
+
         canvas {
-            border: 1px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             cursor: crosshair;
         }
+
         #controls {
-            margin-top: 10px;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
         }
+
         button {
-            margin: 5px;
-            padding: 10px 15px;
-            font-size: 16px;
+            background: linear-gradient(45deg, #76c7c0, #4e89a8);
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 1rem;
             cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #4e89a8, #76c7c0);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:focus {
+            outline: 2px solid #76c7c0;
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -34,11 +81,12 @@
 <div id="controls">
     <button id="prevBtn">Previous</button>
     <button id="nextBtn">Next</button>
+    <div style="width: 20px;"></div>
     <button id="clearBtn">Clear</button>
     <button id="lineTool">Line</button>
     <button id="boxTool">Box</button>
     <button id="freehandTool">Freehand</button>
-    <button id="eraserTool">Eraser</button>
+    <button id="downloadBtn">Download</button>
 </div>
 
 <script>
@@ -52,8 +100,7 @@
     let startX, startY;
     let currentTool = "freehand";
 
-    // Set drawing color to white
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 2;
 
     function loadImage(index) {
@@ -62,7 +109,6 @@
         img.onload = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Calculate the aspect ratio
             const imgAspectRatio = img.width / img.height;
             const canvasAspectRatio = canvas.width / canvas.height;
 
@@ -70,15 +116,13 @@
             let offsetX = 0, offsetY = 0;
 
             if (imgAspectRatio > canvasAspectRatio) {
-                // Image is wider than canvas
                 drawWidth = canvas.width;
                 drawHeight = canvas.width / imgAspectRatio;
-                offsetY = (canvas.height - drawHeight) / 2; // Center vertically
+                offsetY = (canvas.height - drawHeight) / 2;
             } else {
-                // Image is taller than canvas
                 drawHeight = canvas.height;
                 drawWidth = canvas.height * imgAspectRatio;
-                offsetX = (canvas.width - drawWidth) / 2; // Center horizontally
+                offsetX = (canvas.width - drawWidth) / 2;
             }
 
             ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
@@ -87,7 +131,6 @@
             alert("No more images.");
         };
     }
-
 
     function setTool(tool) {
         currentTool = tool;
@@ -112,8 +155,6 @@
         if (currentTool === "freehand") {
             ctx.lineTo(x, y);
             ctx.stroke();
-        } else if (currentTool === "eraser") {
-            ctx.clearRect(x - 5, y - 5, 10, 10);
         }
     });
 
@@ -156,9 +197,20 @@
     document.getElementById("lineTool").addEventListener("click", () => setTool("line"));
     document.getElementById("boxTool").addEventListener("click", () => setTool("box"));
     document.getElementById("freehandTool").addEventListener("click", () => setTool("freehand"));
-    document.getElementById("eraserTool").addEventListener("click", () => setTool("eraser"));
 
-    // Initial load
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+    const link = document.createElement("a");
+    const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    link.href = image; // Ensure the content is set for downloading
+    link.download = `graph_${currentImageIndex}.png`; // Set the filename
+    document.body.appendChild(link); // Append to the body
+    link.click(); // Trigger the download
+    document.body.removeChild(link); // Cleanup
+});
+
+
+
+
     loadImage(currentImageIndex);
 </script>
 
