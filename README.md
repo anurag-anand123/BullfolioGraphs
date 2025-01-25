@@ -45,15 +45,9 @@ Note:
 
 Shorter candlestick timeframes will not support longer periods in steps 2 and 3.
 
-Possible valid combinations:
+Possible valid combinations: 1week-1m, 12months-1d and similar combinations.
 
-1week-1m
-
-12months-1d
-
-and similar combinations.
-
-Step 4: View Results
+## Step 4: View Results
 
 Once the script completes execution, it will generate graphical representations of momentum stocks.
 
